@@ -53,9 +53,9 @@ class FishingBot:
             while True:
                 current_time = time.time()
                 
-                # Check if we need to recast (30 second failsafe)
-                if current_time - self.last_cast_time >= 30:
-                    print("No fish detected for 30 seconds, recasting...")
+                # Check if we need to recast (45 second failsafe)
+                if current_time - self.last_cast_time >= 45:
+                    print("No fish detected for 45 seconds, recasting...")
                     pyautogui.rightClick()  # Reel in
                     time.sleep(1)
                     pyautogui.rightClick()  # Cast out
@@ -73,7 +73,7 @@ class FishingBot:
                     # Right click again to start fishing
                     pyautogui.rightClick()
                     self.last_cast_time = current_time  # Update cast time
-                time.sleep(0.1)  # Small delay to prevent high CPU usage
+                time.sleep(0.5)  # Small delay to prevent high CPU usage
                 
         except KeyboardInterrupt:
             print("\nFishing bot stopped.")
