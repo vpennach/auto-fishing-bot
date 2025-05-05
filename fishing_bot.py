@@ -49,6 +49,7 @@ class FishingBot:
         print("Fishing bot started. Press Ctrl+C to stop.")
         self.last_cast_time = time.time()  # Initialize cast time
         recast_count = 0  # Counter for consecutive recasts
+        fish_caught = 0  # Counter for the number of fish caught
 
         try:
             while True:
@@ -71,7 +72,8 @@ class FishingBot:
                 # Reset the recast counter if fish is detected
                 screen = self.capture_screen()
                 if self.detect_fish(screen):
-                    print("🎣 Fish detected! Reeling in...")
+                    fish_caught += 1  # Increment the fish caught counter
+                    print(f"🎣 Fish detected! Reeling in... Total fish caught: {fish_caught}")
                     pyautogui.rightClick()  # Right click to reel in
                     time.sleep(1)  # Wait for animation
                     pyautogui.rightClick()  # Right click again to start fishing
