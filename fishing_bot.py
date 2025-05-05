@@ -48,7 +48,8 @@ class FishingBot:
         """Main fishing loop"""
         print("Fishing bot started. Press Ctrl+C to stop.")
         self.last_cast_time = time.time()  # Initialize cast time
-        
+        recast_count = 0  # Counter for consecutive recasts
+
         try:
             while True:
                 current_time = time.time()
@@ -56,23 +57,26 @@ class FishingBot:
                 # Check if we need to recast (45 second failsafe)
                 if current_time - self.last_cast_time >= 45:
                     print("No fish detected for 45 seconds, recasting...")
-                    pyautogui.rightClick()  # Reel in
-                    time.sleep(1)
-                    pyautogui.rightClick()  # Cast out
+                    pyautogui.rightClick()  # Reel in or out
                     self.last_cast_time = current_time
+                    recast_count += 1  # Increment the recast counter
+                    
+                    # Check if we've recast 5 times in a row
+                    if recast_count >= 5:
+                        print("Recast limit reached. Shutting down the bot.")
+                        break  # Exit the loop to stop the bot
+                    
                     continue
                 
-                # Capture screen and check for fish
+                # Reset the recast counter if fish is detected
                 screen = self.capture_screen()
                 if self.detect_fish(screen):
                     print("🎣 Fish detected! Reeling in...")
-                    # Right click to reel in
-                    pyautogui.rightClick()
-                    # Wait for animation
-                    time.sleep(2)
-                    # Right click again to start fishing
-                    pyautogui.rightClick()
+                    pyautogui.rightClick()  # Right click to reel in
+                    time.sleep(1)  # Wait for animation
+                    pyautogui.rightClick()  # Right click again to start fishing
                     self.last_cast_time = current_time  # Update cast time
+                    recast_count = 0  # Reset the recast counter
                 time.sleep(0.5)  # Small delay to prevent high CPU usage
                 
         except KeyboardInterrupt:
